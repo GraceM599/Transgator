@@ -4,17 +4,25 @@
 #include <vector>
 
 #include "dictionary.h"
+struct Terminate {
+
+};
 struct Node {
-    int val = 0;
+    char val = 0;
     Node* next = nullptr;
+    //Terminate terminate;
+    bool term = 0;
+    std::string translation = "";
 };
 class Trie : dictionary{
-    Trie();
-    ~Trie();
+
     std::vector<Node*> root;
 public:
+    Trie();
+    ~Trie();
     bool insert(std::string en, std::string trans) override;
     std::string search(std::string en) override;
+    //bool delete();
 };
 
 
