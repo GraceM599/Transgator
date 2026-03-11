@@ -1,12 +1,32 @@
 #pragma once
+#include <array>
+
 #include "dictionary.h"
 #include <fstream>
 #include <iostream>
+#include <utility>
 #include <vector>
 
-class HashMap : dictionary{
 
-    int hash(std::string en);
+struct Slot {
+    std::string en;
+    std::string translation;
+    Slot(std::string e, std::string t) {
+        this->en = std::move(e);
+        this->translation = std::move(t);
+    }
+    Slot() {
+        en = "";
+        translation = "";
+    }
+};
+
+
+class HashMap : dictionary{
+    std::array<Slot, 500000> table;
+    size_t hash(const std::string& en) {
+        return 0;
+    }
 public:
     HashMap() {
         loadData();
@@ -41,7 +61,29 @@ public:
 
     }
 
-    bool insert(std::string en, std::string trans) override;
+    bool insert(std::string en, std::string trans) override {
+        //modulus by M **
+        int loc = hash(en) % table.size(); // ensure within bounds
+
+        for (int i = 0; i < table.size(); ++i) {
+            int index = (loc + i) % table.size();
+
+            if (table[index].en == "") {
+                //Empty slot
+                table[index].en = en;
+                table[index].translation = trans;
+                return true;
+            }
+
+            if (table[index].en == en) {
+                //key matchhes
+                table[index].translation = trans;
+                return true;
+            }
+            //else move to next spot
+
+        }
+    }
     std::string search(std::string en) override;
 };
 
