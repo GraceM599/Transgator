@@ -104,4 +104,5 @@ std::vector<std::tuple<std::string, std::string, unsigned long long>> Trie::pref
             currentNode = currentNode->children[index];
         }
     }
+    return result;
 }
