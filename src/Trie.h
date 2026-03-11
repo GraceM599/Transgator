@@ -6,55 +6,30 @@
 #include <vector>
 
 #include "dictionary.h"
-struct Terminate {
 
-};
-struct Node {
-    char val = 0;
-    Node* next = nullptr;
-    //Terminate terminate;
-    bool term = 0;
-    std::string translation = "";
-};
-class Trie : dictionary{
-
-    std::vector<Node*> root;
+class Trie : dictionary {
+    struct TrieNode {
+        bool isEnd;
+        TrieNode* children[26];
+        std::string conversion;
+        unsigned long long frequency;
+        TrieNode() : isEnd(false), conversion("") {
+            for (int i = 0; i < 26; i++) {
+                children[i] = nullptr;
+            }
+        }
+    };
 public:
-    Trie() {
+    TrieNode* root = nullptr;
+    Trie(){
         loadData();
-    }
+    };
     ~Trie();
-    std::vector<std::string> getValues(std::string line) {
-        std::vector<std::string> r = {};
-        std::string curr = "";
-        for (int i = 0; i<line.size(); ++i) {
-            if (line[i] == ',') {
-                r.push_back(curr);
-            }
-        }
-    }
-    bool loadData() {
-        std::fstream in;
-        bool success = true;
-        in.open("data/dictionary.csv");
-        if (!in) {
-            std::cout << "Issue openning dictionary.csv in HashMap.h" << std::endl;
-            return 0;
-        }
-        std::string line = "";
-        while (std::getline(in, line)) {
-            std::vector<std::string> values = getValues(line);
-            success = insert(values[0], values[1]);
-            if (!success) {
-                std::cout << "Error with line: " << line << std::endl;
-            }
-        }
-        return 1;
+    bool insert(std::string key, std::string value, unsigned long long usage);
+    std::string search(std::string key);
+    std::vector<std::tuple<std::string, std::string, unsigned long long>> prefixSearch(std::string key);
+    bool loadData();
 
-    }
-    bool insert(std::string en, std::string trans) override;
-    std::string search(std::string en) override;
-    //bool delete();
 };
 
 
