@@ -53,6 +53,7 @@ public:
                 r.push_back(curr);
             }
         }
+		return r;
     }
     bool loadData() {
         std::fstream in;

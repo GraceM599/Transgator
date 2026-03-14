@@ -110,7 +110,7 @@ std::vector<std::tuple<std::string, std::string>> Trie::prefixSearch(std::string
     //current node is now pointing to the aray of elements off the last leter the user typed in
     //here we want to go into a recursive depth first search - 3 letters deep
     prefixSearchHelper(currentNode, result, 0);
-    std::sort(result.begin(),result.end(),sortbyth);
+    // std::sort(result.begin(),result.end(),sortbyth);
     for (int i = 0; i < 10; i++) { //this may change to be larger or smaller than ten after talking to grace
         smallerResult.push_back(std::make_tuple(std::get<0>(result[i]), std::get<1>(result[i])));
     }
