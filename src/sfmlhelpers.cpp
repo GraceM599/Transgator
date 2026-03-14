@@ -129,6 +129,7 @@ void DisplayWindow::updateInputText(sf::Event &event){
 			perform_search = true;
 		}
 	}
+
 	inputword.setString(input);
 }
 
