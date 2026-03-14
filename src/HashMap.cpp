@@ -18,7 +18,7 @@
         loadData();
     }
     HashMap::~HashMap(){}
-    std::vector<std::string> getValues(std::string line) {
+    std::vector<std::string> HashMap::getValues(std::string line) {
         std::vector<std::string> r = {};
         std::string curr = "";
         line += ",";
