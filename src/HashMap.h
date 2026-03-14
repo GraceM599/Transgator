@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <chrono>
 
 #include "dictionary.h"
 #include <fstream>
@@ -169,7 +170,30 @@ public:
         }
         return result;
     }
+    double getFunctionTime(std::string func, std::string word = "") {
+        auto start = std::chrono::high_resolution_clock::now();
+        if (func == "constructor") {
+            start = std::chrono::high_resolution_clock::now();
+            HashMap();
+        }
+        if (func == "word search") {
+            start = std::chrono::high_resolution_clock::now();
+            search(word);
 
+        }
+        if (func == "prefix search") {
+            start = std::chrono::high_resolution_clock::now();\
+            prefixSearch(word);
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double> diff = end - start;
+
+
+        return diff.count();
+
+    }
 
 };
 
