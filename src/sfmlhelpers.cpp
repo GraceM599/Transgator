@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -99,6 +101,8 @@ void DisplayWindow::configureStaticText(){
 	setupText(trietitle, "Trie Implementation", 50, sf::Color::Black, {490, 560}, true);
 	setupText(hashtitle, "Hash Map Implementation", 50, sf::Color::Black, {1433, 560}, true);
 	setupText(inputword, "", 35, sf::Color::Black, {630, 190}, false);
+	cursor.setSize({2, 38});
+	cursor.setFillColor(sf::Color::Black);
 }
 
 // signifcant help from my minesweeper project with the name typing and checking - Rylee
@@ -131,6 +135,16 @@ void DisplayWindow::updateInputText(sf::Event &event){
 	}
 
 	inputword.setString(input);
+}
+
+void DisplayWindow::updateCursor(){
+	if (cursorclock.getElapsedTime().asSeconds() >= .75){
+		cursorvisible = !cursorvisible;
+		cursorclock.restart();
+	}
+
+	sf::FloatRect bounds = inputword.getGlobalBounds();	
+	cursor.setPosition({bounds.position.x + bounds.size.x + 3, 191});
 }
 
 void DisplayWindow::buttonClick(sf::Event &event){
@@ -208,6 +222,8 @@ void DisplayWindow::drawText(){
 	window.draw(hashtitle);
 	window.draw(hashtime);
 	window.draw(hashresults);
+	if (cursorvisible)
+		window.draw(cursor);
 }
 
 void DisplayWindow::run(){
@@ -225,6 +241,7 @@ void DisplayWindow::run(){
 			updateInputText(*event);
 			buttonClick(*event);
 		}
+		updateCursor();
 		drawText();
 		window.display();
 	}
