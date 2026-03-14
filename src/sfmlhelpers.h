@@ -16,7 +16,7 @@ struct TextureManager{
 	sf::Texture searchbar;
 	sf::Texture gotexture;
 
-	// three sprites - one for the prefix selection, word search selection, go button for search
+	// set up image sprites
 	sf::Sprite prefixbutton;
 	sf::Sprite wordsearchbutton;
 	sf::Sprite gobutton;
@@ -33,6 +33,11 @@ class DisplayWindow{
 		sf::Font font;
 		sf::RectangleShape horizontaldivider;
 		sf::RectangleShape verticaldivider;
+		sf::RectangleShape cursor;
+		bool cursorvisible = true;
+		sf::Clock cursorclock;
+
+
 		
 		sf::Text title;
 		sf::Text prefixdescription;
@@ -63,6 +68,9 @@ class DisplayWindow{
 
 		// updates the user input text as they are typing
 		void updateInputText(sf::Event &event);
+
+		// implements a blinking cursor while the user is typing
+		void updateCursor();
 
 		// given a click event, determine if they clicked any buttons and deal with the buttons
 		void buttonClick(sf::Event &event);
