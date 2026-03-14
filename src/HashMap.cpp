@@ -138,7 +138,7 @@
             }
         }
         std::vector<std::tuple<std::string, std::string>> result;
-        int limit = std::min(10, (int)total.size());
+        int limit = std::min(5, (int)total.size());
         for (int i=0; i<limit; ++i) {
             auto curr = total.top();
             total.pop();
