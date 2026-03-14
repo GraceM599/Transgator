@@ -61,9 +61,6 @@ class DisplayWindow{
 		// sets up text that doesn't change on the window
 		void configureStaticText();
 
-		// sets up and updates the searchbar text
-		void updateSearchText();
-
 		// updates the user input text as they are typing
 		void updateInputText(sf::Event &event);
 
