@@ -16,7 +16,8 @@ FetchContent_MakeAvailable(SFML)
 file(GLOB_RECURSE PROJECT_SOURCES src/*.cpp)
 
 set(SFML_STATIC_LIBRARIES OFF)  # we are using dynamic SFML
-add_executable(TRANSGATOR ${PROJECT_SOURCES})
+add_executable(TRANSGATOR ${PROJECT_SOURCES}
+        src/sfmlhelpers.cpp)
 
 target_compile_features(TRANSGATOR PRIVATE cxx_std_17)
 
