@@ -7,7 +7,7 @@
 
 // a lot of this has been inspired by and copied from my minesweeper project - Rylee
 
-TextureManager::TextureManager() : prefixbutton(prefixsearch), wordsearchbutton(wordsearch), gobutton(searchbar){
+TextureManager::TextureManager() : prefixbutton(prefixsearch), wordsearchbutton(wordsearch), gobutton(gotexture), searchbarsprite(searchbar){
 	if (!prefixsearch.loadFromFile("assets/images/prefixsearch.png"))
     	std::cout << "Failed to load prefixsearch" << std::endl;
 
@@ -30,10 +30,17 @@ TextureManager::TextureManager() : prefixbutton(prefixsearch), wordsearchbutton(
 
 	if (!searchbar.loadFromFile("assets/images/searchbar.png"))
 		std::cout << "Failed to load searchbar" << std::endl;
+
+	searchbarsprite.setTexture(searchbar, true);
+	searchbarsprite.setScale({.5, .5});
+	searchbarsprite.setPosition({585, 150});
+
+	if (!gotexture.loadFromFile("assets/images/gobutton.png"))
+		std::cout << "Failed to load go button" << std::endl;
 	
-	gobutton.setTexture(searchbar, true);
-	gobutton.setScale({.5, .5});
-	gobutton.setPosition({630, 160});
+	gobutton.setTexture(gotexture, true);
+	gobutton.setScale({.51, .51});
+	gobutton.setPosition({1148, 149});
 }
 
 // taken from the minesweeper specs with some modifications for sfml 3.0.2
@@ -66,7 +73,6 @@ DisplayWindow::DisplayWindow() :
   	hashtime(font),
   	hashresults(font){
 
-
 	// load our text font
 	font.openFromFile("assets/arialuni.ttf");
 
@@ -77,7 +83,6 @@ DisplayWindow::DisplayWindow() :
 
 	configureStaticText();
 }
-
 
 void DisplayWindow::configureStaticText(){
 	horizontaldivider.setSize({1839.5, 2});
@@ -93,6 +98,7 @@ void DisplayWindow::configureStaticText(){
 	setupText(wholedescription, "Search for a direct\n\n\ntranslation of the\n\n\nentered word.", 20, sf::Color::Black, {1754, 395}, false);
 	setupText(trietitle, "Trie Implementation", 50, sf::Color::Black, {490, 560}, true);
 	setupText(hashtitle, "Hash Map Implementation", 50, sf::Color::Black, {1433, 560}, true);
+	setupText(inputword, "", 35, sf::Color::Black, {630, 190}, false);
 }
 
 // signifcant help from my minesweeper project with the name typing and checking - Rylee
@@ -123,9 +129,61 @@ void DisplayWindow::updateInputText(sf::Event &event){
 			perform_search = true;
 		}
 	}
+	inputword.setString(input);
 }
 
-void DisplayWindow::updateResults(){
+void DisplayWindow::buttonClick(sf::Event &event){
+	if (auto clickevent = event.getIf<sf::Event::MouseButtonPressed>()){
+
+		sf::Vector2f mouseposition(clickevent->position);
+
+		// got help with translating sfml 2.x to 3.0.2 from google and AI
+		if (textures.prefixbutton.getGlobalBounds().contains(mouseposition)){
+			if (prefix_on){
+				prefix_on = false;
+				textures.prefixbutton.setTexture(textures.prefixsearch, true);
+			}
+			else {
+				prefix_on = true;
+				textures.prefixbutton.setTexture(textures.prefixsearch_pressed, true);
+				if (whole_on){
+					whole_on = false;
+					textures.wordsearchbutton.setTexture(textures.wordsearch, true);
+				}
+			}
+		}
+
+		if (textures.wordsearchbutton.getGlobalBounds().contains(mouseposition)){
+			if (whole_on){
+				whole_on = false;
+				textures.wordsearchbutton.setTexture(textures.wordsearch, true);
+			}
+			else {
+				whole_on = true;
+				textures.wordsearchbutton.setTexture(textures.wordsearch_pressed, true);
+				if (prefix_on){
+					prefix_on = false;
+					textures.prefixbutton.setTexture(textures.prefixsearch, true);
+				}
+			}
+		}
+
+		if (textures.gobutton.getGlobalBounds().contains(mouseposition)){
+			if (prefix_on || whole_on && input.size() > 0)
+				runSearch();
+		}
+	}
+}
+
+void DisplayWindow::runSearch(){
+	
+}
+
+void DisplayWindow::updateTrieResults(){
+
+}
+
+void DisplayWindow::updateHashResults(){
 
 }
 
@@ -133,6 +191,7 @@ void DisplayWindow::drawButtons(){
 	window.draw(textures.prefixbutton);
 	window.draw(textures.wordsearchbutton);
 	window.draw(textures.gobutton);
+	window.draw(textures.searchbarsprite);
 }
 
 void DisplayWindow::drawText(){
@@ -162,7 +221,8 @@ void DisplayWindow::run(){
 			if (event->is<sf::Event::Closed>()) {
 				window.close();
 			}
-	
+			updateInputText(*event);
+			buttonClick(*event);
 		}
 		drawText();
 		window.display();
