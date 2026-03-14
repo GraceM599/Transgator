@@ -182,7 +182,7 @@ public:
 
         }
         if (func == "prefix search") {
-            start = std::chrono::high_resolution_clock::now();\
+            start = std::chrono::high_resolution_clock::now();
             prefixSearch(word);
         }
 
