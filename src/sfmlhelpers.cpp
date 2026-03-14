@@ -1,6 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Rect.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -45,19 +43,11 @@ TextureManager::TextureManager() : prefixbutton(prefixsearch), wordsearchbutton(
 	gobutton.setPosition({1148, 149});
 }
 
-// taken from the minesweeper specs with some modifications for sfml 3.0.2
-void setText(sf::Text &text, float x, float y){
-	sf::FloatRect textRect = text.getLocalBounds();
-	text.setOrigin({textRect.position.x + textRect.size.x/2.0f,
-	textRect.position.y + textRect.size.y/2.0f});
-	text.setPosition(sf::Vector2f(x, y));
-}
-
 void DisplayWindow::setupText(sf::Text &text, std::string message, int size, sf::Color color, std::pair<int, int> pos, bool bold){
 	text.setString(message);
 	text.setCharacterSize(size);
 	text.setFillColor(color);
-	setText(text, pos.first, pos.second);
+	text.setPosition({float(pos.first), float(pos.second)});
 	if (bold)
 		text.setStyle(sf::Text::Bold);
 }
@@ -76,7 +66,10 @@ DisplayWindow::DisplayWindow() :
   	hashresults(font){
 
 	// load our text font
-	font.openFromFile("assets/arialuni.ttf");
+	if (!font.openFromFile("assets/arialuni.ttf"))
+		{
+			std::cerr << "Error loading font";
+		}
 
 	// set all bools to false
 	prefix_on = false;
@@ -95,14 +88,18 @@ void DisplayWindow::configureStaticText(){
 	verticaldivider.setFillColor(sf::Color::Black);
 	verticaldivider.setPosition({960, 540});
 
-	setupText(title, "TRANSGATOR: ENGLISH TO SPANISH", 60, sf::Color::Black, {960, 80}, true);
-	setupText(prefixdescription, "Search for translations\n\n\nfor the five most\n\n\ncommon words starting\n\n\nwith a given prefix.", 20, sf::Color::Black, {146, 395}, false);
-	setupText(wholedescription, "Search for a direct\n\n\ntranslation of the\n\n\nentered word.", 20, sf::Color::Black, {1754, 395}, false);
-	setupText(trietitle, "Trie Implementation", 50, sf::Color::Black, {490, 560}, true);
-	setupText(hashtitle, "Hash Map Implementation", 50, sf::Color::Black, {1433, 560}, true);
+	setupText(title, "TRANSGATOR: ENGLISH TO SPANISH", 80, sf::Color::Black, {220, 40}, true);
+	setupText(prefixdescription, "Search for translations\n\n\nfor the five most\n\n\ncommon words starting\n\n\nwith a given prefix.", 20, sf::Color::Black, {50, 330}, false);
+	setupText(wholedescription, "Search for a direct\n\n\ntranslation of the\n\n\nentered word.", 20, sf::Color::Black, {1650, 342}, false);
+	setupText(trietitle, "Trie Implementation", 70, sf::Color::Black, {140, 520}, true);
+	setupText(hashtitle, "Hash Map Implementation", 70, sf::Color::Black, {1015, 520}, true);
 	setupText(inputword, "", 35, sf::Color::Black, {630, 190}, false);
-	cursor.setSize({2, 38});
-	cursor.setFillColor(sf::Color::Black);
+	setupText(trietime, "", 20, sf::Color::Black, {25, 600}, false);
+	setupText(hashtime, "", 20, sf::Color::Black, {980, 600}, false);
+	setupText(trieresults, "", 50, sf::Color::Black, {0, 0}, true);
+	setupText(hashresults, "", 50, sf::Color::Black, {0, 0}, true);
+	// setupText(trieresults, "Translation", 50, sf::Color::Black, {340, 780}, true);
+	// setupText(hashresults, "Translation", 50, sf::Color::Black, {1335, 780}, true);
 }
 
 // signifcant help from my minesweeper project with the name typing and checking - Rylee
@@ -133,18 +130,7 @@ void DisplayWindow::updateInputText(sf::Event &event){
 			perform_search = true;
 		}
 	}
-
 	inputword.setString(input);
-}
-
-void DisplayWindow::updateCursor(){
-	if (cursorclock.getElapsedTime().asSeconds() >= .75){
-		cursorvisible = !cursorvisible;
-		cursorclock.restart();
-	}
-
-	sf::FloatRect bounds = inputword.getGlobalBounds();	
-	cursor.setPosition({bounds.position.x + bounds.size.x + 3, 191});
 }
 
 void DisplayWindow::buttonClick(sf::Event &event){
@@ -222,8 +208,6 @@ void DisplayWindow::drawText(){
 	window.draw(hashtitle);
 	window.draw(hashtime);
 	window.draw(hashresults);
-	if (cursorvisible)
-		window.draw(cursor);
 }
 
 void DisplayWindow::run(){
@@ -241,7 +225,6 @@ void DisplayWindow::run(){
 			updateInputText(*event);
 			buttonClick(*event);
 		}
-		updateCursor();
 		drawText();
 		window.display();
 	}
