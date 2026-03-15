@@ -57,8 +57,10 @@ class DisplayWindow{
 		bool whole_on;
 		bool cursorvisible;
 
-	public:
+		// HashMap hash;
+		// Trie trie;
 
+	public:
 		// constructor
 		DisplayWindow();
 

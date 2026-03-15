@@ -179,14 +179,67 @@ void DisplayWindow::buttonClick(sf::Event &event){
 		}
 
 		if (textures.gobutton.getGlobalBounds().contains(mouseposition)){
-			if (prefix_on || whole_on && input.size() > 0)
+			if ((prefix_on || whole_on) && input.size() > 0)
 				runSearch();
 		}
 	}
 }
 
 void DisplayWindow::runSearch(){
-	
+	hashresult_string = "";
+	trieresult_string = "";
+	if (whole_on)
+	{
+		// hashtime_string = hash.getFunctionTime("word search", input);
+		// hashresult_string = hash.search(input);
+		hashtime_string = "3.1415927"; // temp value until hash map is working for testing
+		hashresult_string = "Resultforhash"; // temp value until hash map is working for testing
+		
+		// something here for trie time
+		// trieresult_string = trie.search(input);
+		trietime_string = "0.12941";
+		trieresult_string = "trieresult";
+	}
+	else
+	{
+		// hashtime_string = hash.getFunctionTime("prefix search", input);
+		// auto hashresultvec = hash.prefixSearch(input);
+
+		hashtime_string = "24.2819";
+		std::vector<std::tuple<std::string, std::string>> hashresultvec = {
+			{"hash", "hola"},
+			{"goodbye", "adiós"},
+			{"please", "por favor"},
+			{"thanks", "gracias"},
+			{"water", "agua"}
+		};
+
+		for (int i = 0; i < 5; i++){
+			hashresult_string = hashresult_string + std::to_string(i+1) + ". " + 
+			std::get<0>(hashresultvec[i]) + " - " + std::get<1>(hashresultvec[i]) + "\n\n";
+		}
+		hashresult_string.erase(hashresult_string.size() - 2);
+
+		// include something here for the trie time
+		// auto trieresultvec = trie.prefixSearch(input);
+
+		trietime_string = "0.219";
+		std::vector<std::tuple<std::string, std::string>> trieresultvec = {
+			{"trie", "gato"},
+			{"dog", "perro"},
+			{"house", "casa"},
+			{"book", "libro"},
+			{"food", "comida"}
+		};
+
+		for (int i = 0; i < 5; i++){
+			trieresult_string = trieresult_string + std::to_string(i+1) + ". " + 
+			std::get<0>(trieresultvec[i]) + " - " + std::get<1>(trieresultvec[i]) + "\n\n";
+		}
+		trieresult_string.erase(trieresult_string.size() - 4);
+	}
+	updateTrieResults();
+	updateHashResults();
 }
 
 void DisplayWindow::updateTrieResults(){
@@ -194,8 +247,8 @@ void DisplayWindow::updateTrieResults(){
 	trietime.setString("Time taken to complete: " + trietime_string);
 
 	if (whole_on){
-		sf::FloatRect bounds = hashresults.getGlobalBounds();
-		hashresults.setPosition({1440 - bounds.size.x/2.0f, 780});
+		sf::FloatRect bounds = trieresults.getGlobalBounds();
+		trieresults.setPosition({480 - bounds.size.x/2.0f, 780});
 	}
 
 	else
@@ -209,7 +262,7 @@ void DisplayWindow::updateHashResults(){
 
 	if (whole_on){
 		sf::FloatRect bounds = hashresults.getGlobalBounds();
-		hashresults.setPosition({480 - bounds.size.x/2.0f, 780});
+		hashresults.setPosition({1440 - bounds.size.x/2.0f, 780});
 	}
 
 	else
