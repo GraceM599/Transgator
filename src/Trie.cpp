@@ -101,8 +101,8 @@ Trie::~Trie() {
     delete root;
 }
 //helper comparator function is based on info found here: https://www.geeksforgeeks.org/cpp/sorting-vector-tuple-c-descending-order/
-bool sortbyth(const std::tuple<std::string, std::string, int>& a, const std::tuple<std::string, std::string, int>& b){
-    return (std::get<2>(a) > std::get<2>(b));
+bool sortbyth(const std::tuple<std::string, std::string, unsigned long long>& a,const std::tuple<std::string, std::string, unsigned long long>& b) {
+    return std::get<2>(a) > std::get<2>(b);
 }
 std::vector<std::tuple<std::string, std::string>> Trie::prefixSearch(std::string key) {
     std::vector<std::tuple<std::string, std::string, unsigned long long>> result;
@@ -124,9 +124,16 @@ std::vector<std::tuple<std::string, std::string>> Trie::prefixSearch(std::string
     //current node is now pointing to the aray of elements off the last leter the user typed in
     //here we want to go into a recursive depth first search - 3 letters deep
     prefixSearchHelper(currentNode, result, 0);
-    // std::sort(result.begin(),result.end(),sortbyth);
-    for (int i = 0; i < 10; i++) { //this may change to be larger or smaller than ten after talking to grace
-        smallerResult.push_back(std::make_tuple(std::get<0>(result[i]), std::get<1>(result[i])));
+    std::sort(result.begin(),result.end(),sortbyth);
+    if (result.size() > 5) {
+        for (int i = 0; i < 5; i++) { //this may change to be larger or smaller than ten after talking to grace
+            smallerResult.push_back(std::make_tuple(std::get<0>(result[i]), std::get<1>(result[i])));
+        }
+    }
+    else {
+        for (int i = 0; i < result.size(); i++) {
+            smallerResult.push_back(std::make_tuple(std::get<0>(result[i]), std::get<1>(result[i])));
+        }
     }
     return smallerResult;
 }
