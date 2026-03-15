@@ -102,6 +102,9 @@ unsigned long long HashMap::hash(const std::string& en)
                 //key matches
                 return table[index].translation;
             }
+            if (table[index].en == "") {
+                return "";
+            }
 
         }
         return "Not found!";
@@ -115,6 +118,9 @@ unsigned long long HashMap::hash(const std::string& en)
             if (table[index].en == en) {
                 //key matches
                 return table[index];
+            }
+            if (table[index].en == "") {
+                return Slot();
             }
 
         }
