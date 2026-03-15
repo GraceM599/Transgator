@@ -190,15 +190,15 @@ void DisplayWindow::runSearch(){
 	trieresult_string = "";
 	if (whole_on)
 	{
-		// hashtime_string = hash.getFunctionTime("word search", input);
-		// hashresult_string = hash.search(input);
-		hashtime_string = "3.1415927"; // temp value until hash map is working for testing
-		hashresult_string = "Resultforhash"; // temp value until hash map is working for testing
+		hashtime_string = hash.getFunctionTime("word search", input);
+		hashresult_string = hash.search(input);
+		// hashtime_string = "3.1415927"; // temp value until hash map is working for testing
+		// hashresult_string = "Resultforhash"; // temp value until hash map is working for testing
 		
 		// something here for trie time
-		// trieresult_string = trie.search(input);
-		trietime_string = "0.12941";
-		trieresult_string = "trieresult";
+		trieresult_string = trie.search(input);
+		trietime_string = "time_whole";
+		// trieresult_string = "trieresult";
 	}
 	else
 	{
@@ -220,17 +220,16 @@ void DisplayWindow::runSearch(){
 		}
 		hashresult_string.erase(hashresult_string.size() - 3);
 
-		// include something here for the trie time
-		// auto trieresultvec = trie.prefixSearch(input);
+		auto trieresultvec = trie.prefixSearch(input);
+		trietime_string = "time_prefix";
 
-		trietime_string = "0.219";
-		std::vector<std::tuple<std::string, std::string>> trieresultvec = {
-			{"cat", "gato"},
-			{"dog", "perro"},
-			{"house", "casa"},
-			{"book", "libro"},
-			{"food", "comida"}
-		};
+		// std::vector<std::tuple<std::string, std::string>> trieresultvec = {
+		// 	{"cat", "gato"},
+		// 	{"dog", "perro"},
+		// 	{"house", "casa"},
+		// 	{"book", "libro"},
+		// 	{"food", "comida"}
+		// };
 
 		for (int i = 0; i < 5; i++){
 			trieresult_string = trieresult_string + std::to_string(i+1) + ". " + 
