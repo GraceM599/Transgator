@@ -3,8 +3,10 @@
 
 #include "HashMap.h"
 
+#include <filesystem>
 
-    unsigned long long HashMap::hash(const std::string& en)
+
+unsigned long long HashMap::hash(const std::string& en)
     {
         unsigned long hash = 5381;
 
@@ -14,7 +16,7 @@
 
         return hash;
     }
-    HashMap::HashMap() {
+    HashMap::HashMap() : table(500000){
         loadData();
     }
 
@@ -37,7 +39,7 @@
     bool HashMap::loadData() {
         std::fstream in;
         bool success = true;
-        in.open("data/dictionary.csv");
+        in.open("../../data/dictionary.csv");
         if (!in) {
             std::cout << "Issue openning dictionary.csv in HashMap.h" << std::endl;
             return 0;
@@ -45,9 +47,20 @@
         std::string line = "";
         while (std::getline(in, line)) {
             std::vector<std::string> values = getValues(line);
-            success = insert(values[0], values[1], std::stoull(values[2]));
+
+            try {
+                unsigned long long freq = std::stoull(values[2]);
+                success = insert(values[0], values[1], freq);
+            }
+            catch (const std::invalid_argument& e) {
+                //std::cout << "Invalid number: " << values[2] << std::endl;
+
+                continue;
+            }
+
             if (!success) {
-                std::cout << "Error with line: " << line << std::endl;
+                //std::cout << "Error with line: " << line << std::endl;
+                continue;
             }
         }
         return 1;
@@ -77,6 +90,7 @@
             //else move to next spot
 
         }
+        return true;
     }
     std::string HashMap::search(std::string en)  {
         int loc = hash(en) % table.size(); // ensure within bounds
@@ -150,7 +164,7 @@
         auto start = std::chrono::high_resolution_clock::now();
         if (func == "constructor") {
             start = std::chrono::high_resolution_clock::now();
-            HashMap();
+            HashMap temp;
         }
         if (func == "word search") {
             start = std::chrono::high_resolution_clock::now();

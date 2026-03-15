@@ -29,8 +29,8 @@ struct Slot {
 
 //Used hash function djb2 from http://www.cse.yorku.ca/%7Eoz/hash.html
 //Known to be good for strings
-class HashMap : dictionary{
-    std::array<Slot, 500000> table;
+class HashMap : public dictionary{
+    std::vector<Slot> table;
     //takes string and returns the hash as a large number
     unsigned long long hash(const std::string& en);
 
