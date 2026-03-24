@@ -174,8 +174,8 @@ std::string Trie::getFunctionTime(std::string function, std::string word) {
     }
     auto end = std::chrono::high_resolution_clock::now();
 
-    auto total = std::chrono::duration_cast<std::chrono::milliseconds>(end - clock).count();
+    std::chrono::duration<double> diff = end - clock;
 
-    return std::to_string(total);
+    return std::to_string(diff.count());
 
 }
