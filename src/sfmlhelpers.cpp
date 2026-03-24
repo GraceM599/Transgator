@@ -192,27 +192,14 @@ void DisplayWindow::runSearch(){
 	{
 		hashtime_string = hash.getFunctionTime("word search", input);
 		hashresult_string = hash.search(input);
-		// hashtime_string = "3.1415927"; // temp value until hash map is working for testing
-		// hashresult_string = "Resultforhash"; // temp value until hash map is working for testing
 		
-		// something here for trie time
 		trieresult_string = trie.search(input);
-		trietime_string = "time_whole";
-		// trieresult_string = "trieresult";
+		trietime_string = trie.getFunctionTime("word search", input);
 	}
 	else
 	{
-		// hashtime_string = hash.getFunctionTime("prefix search", input);
-		// auto hashresultvec = hash.prefixSearch(input);
-
-		hashtime_string = "24.2819";
-		std::vector<std::tuple<std::string, std::string>> hashresultvec = {
-			{"hash", "hola"},
-			{"goodbye", "adios"},
-			{"please", "por favor"},
-			{"thanks", "gracias"},
-			{"water", "agua"}
-		};
+		hashtime_string = hash.getFunctionTime("prefix search", input);
+		auto hashresultvec = hash.prefixSearch(input);
 
 		for (int i = 0; i < 5; i++){
 			hashresult_string = hashresult_string + std::to_string(i+1) + ". " + 
@@ -221,15 +208,8 @@ void DisplayWindow::runSearch(){
 		hashresult_string.erase(hashresult_string.size() - 3);
 
 		auto trieresultvec = trie.prefixSearch(input);
-		trietime_string = "time_prefix";
+		trietime_string = trie.getFunctionTime("prefix search", input);
 
-		// std::vector<std::tuple<std::string, std::string>> trieresultvec = {
-		// 	{"cat", "gato"},
-		// 	{"dog", "perro"},
-		// 	{"house", "casa"},
-		// 	{"book", "libro"},
-		// 	{"food", "comida"}
-		// };
 
 		for (int i = 0; i < 5; i++){
 			trieresult_string = trieresult_string + std::to_string(i+1) + ". " + 
@@ -243,7 +223,7 @@ void DisplayWindow::runSearch(){
 
 void DisplayWindow::updateTrieResults(){
 	trieresults.setString(trieresult_string);
-	trietime.setString("Time taken to complete: " + trietime_string);
+	trietime.setString("Time taken to complete: " + trietime_string + " seconds");
 
 	if (whole_on){
 		sf::FloatRect bounds = trieresults.getGlobalBounds();
@@ -257,7 +237,7 @@ void DisplayWindow::updateTrieResults(){
 
 void DisplayWindow::updateHashResults(){
 	hashresults.setString(hashresult_string);
-	hashtime.setString("Time taken to complete: " + hashtime_string);
+	hashtime.setString("Time taken to complete: " + hashtime_string + " seconds");
 
 	if (whole_on){
 		sf::FloatRect bounds = hashresults.getGlobalBounds();
