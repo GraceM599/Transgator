@@ -147,10 +147,12 @@ void Trie::prefixSearchHelper(Trie::TrieNode* start, std::vector<std::tuple<std:
     if (!start) {
         return;
     }
+
+    if (start->isEnd) {
+        result.push_back(std::make_tuple(start->word, start->conversion, start->frequency));
+    }
+
     if (count == 3) { //this is the base case - we went three down are checking if its a word- if so we add it and return if not just return
-        if (start->isEnd) {
-            result.push_back(std::make_tuple(start->word, start->conversion, start->frequency));
-        }
         return;
     }
     for (int i = 0; i < 26; i++) {
