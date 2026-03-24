@@ -201,28 +201,38 @@ void DisplayWindow::runSearch(){
 		hashtime_string = hash.getFunctionTime("prefix search", input);
 		auto hashresultvec = hash.prefixSearch(input);
 
-		for (int i = 0; i < 5; i++){
-			hashresult_string = hashresult_string + std::to_string(i+1) + ". " + 
-			std::get<0>(hashresultvec[i]) + " - " + std::get<1>(hashresultvec[i]) + "\n\n\n";
+		if (hashresultvec.size() == 0){
+			hashresult_string = "not found";
 		}
-		hashresult_string.erase(hashresult_string.size() - 3);
+
+		else {
+			for (int i = 0; i < hashresultvec.size(); i++){
+				hashresult_string = hashresult_string + std::to_string(i+1) + ". " + 
+				std::get<0>(hashresultvec[i]) + " - " + std::get<1>(hashresultvec[i]) + "\n\n\n";
+			}
+			hashresult_string.erase(hashresult_string.size() - 3);
+		}
 
 		auto trieresultvec = trie.prefixSearch(input);
 		trietime_string = trie.getFunctionTime("prefix search", input);
 
-
-		for (int i = 0; i < 5; i++){
-			trieresult_string = trieresult_string + std::to_string(i+1) + ". " + 
-			std::get<0>(trieresultvec[i]) + " - " + std::get<1>(trieresultvec[i]) + "\n\n\n";
+		if (trieresultvec.size() == 0){
+			trieresult_string = "not found";
 		}
-		trieresult_string.erase(trieresult_string.size() - 3);
-	}
+		else{
+			for (int i = 0; i < trieresultvec.size(); i++){
+				trieresult_string = trieresult_string + std::to_string(i+1) + ". " + 
+				std::get<0>(trieresultvec[i]) + " - " + std::get<1>(trieresultvec[i]) + "\n\n\n";
+			}
+			trieresult_string.erase(trieresult_string.size() - 3);
+			}
+		}
 	updateTrieResults();
 	updateHashResults();
 }
 
 void DisplayWindow::updateTrieResults(){
-	trieresults.setString(trieresult_string);
+	trieresults.setString(sf::String::fromUtf8(trieresult_string.begin(), trieresult_string.end()));
 	trietime.setString("Time taken to complete: " + trietime_string + " seconds");
 
 	if (whole_on){
@@ -236,7 +246,7 @@ void DisplayWindow::updateTrieResults(){
 }
 
 void DisplayWindow::updateHashResults(){
-	hashresults.setString(hashresult_string);
+	hashresults.setString(sf::String::fromUtf8(hashresult_string.begin(), hashresult_string.end()));
 	hashtime.setString("Time taken to complete: " + hashtime_string + " seconds");
 
 	if (whole_on){
