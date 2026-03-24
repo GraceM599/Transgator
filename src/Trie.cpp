@@ -3,6 +3,9 @@
 
 #include "Trie.h"
 
+#include <algorithm>
+#include <chrono>
+
 
 std::vector<std::string> getValues(std::string line) {
     line  = line + ",";
@@ -121,7 +124,7 @@ std::vector<std::tuple<std::string, std::string>> Trie::prefixSearch(std::string
         }
         currentNode = currentNode->children[index];
     }
-    //current node is now pointing to the aray of elements off the last leter the user typed in
+    //current node is now pointing to the aray of elements off the last letter the user typed in
     //here we want to go into a recursive depth first search - 3 letters deep
     prefixSearchHelper(currentNode, result, 0);
     std::sort(result.begin(),result.end(),sortbyth);

@@ -103,11 +103,11 @@ unsigned long long HashMap::hash(const std::string& en)
                 return table[index].translation;
             }
             if (table[index].en == "") {
-                return "Not found!";
+                return "not found";
             }
 
         }
-        return "Not found!";
+        return "not found";
     }
     Slot HashMap::search_Slot(std::string en) {
         int loc = hash(en) % table.size(); // ensure within bounds
