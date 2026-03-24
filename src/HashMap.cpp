@@ -103,7 +103,7 @@ unsigned long long HashMap::hash(const std::string& en)
                 return table[index].translation;
             }
             if (table[index].en == "") {
-                return "";
+                return "Not found!";
             }
 
         }
