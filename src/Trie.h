@@ -13,6 +13,7 @@ class Trie  {
         TrieNode* children[26];
         std::string conversion;
         std::string word;
+        int count = 0;
         unsigned long long frequency;
         TrieNode() : isEnd(false), conversion("") {
             for (int i = 0; i < 26; i++) {

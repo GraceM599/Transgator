@@ -93,6 +93,7 @@ std::string Trie::search(std::string key) {
         }
     }
     if (currentNode->isEnd) {
+        currentNode->count++;
         return currentNode->conversion;
     }
     else {
