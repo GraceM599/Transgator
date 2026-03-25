@@ -7,7 +7,7 @@
 #include <chrono>
 
 
-std::vector<std::string> getValues(std::string line) {
+std::vector<std::string> getValues(std::string line) { //helper function to get data from the csv that is seperated by commas
     line  = line + ",";
     std::vector<std::string> r = {};
     std::string curr = "";
@@ -22,12 +22,13 @@ std::vector<std::string> getValues(std::string line) {
     }
     return r;
 }
+//load data is a function that is called in the constructor that parses through every row in the csv and inserts it into the tree
 bool Trie::loadData() {
     std::fstream in;
     bool success = true;
     in.open("../../data/dictionary.csv");
     if (!in) {
-        std::cout << "Issue openning dictionary.csv in Trie.cpp" << std::endl;
+        std::cout << "Issue opening dictionary.csv in Trie.cpp" << std::endl;
         return 0;
     }
     std::string line = "";
@@ -36,7 +37,7 @@ bool Trie::loadData() {
 
         try {
             unsigned long long freq = std::stoull(values[2]);
-            success = insert(values[0], values[1], freq);
+            success = insert(values[0], values[1], freq); //here is where it is added into the tree
         }
         catch (const std::invalid_argument& e) {
             //std::cout << "Invalid number: " << values[2] << std::endl;
@@ -52,26 +53,28 @@ bool Trie::loadData() {
     return 1;
 }
 
-bool Trie::insert(std::string key, std::string value, unsigned long long usage){
+bool Trie::insert(std::string key, std::string value, unsigned long long usage){ //insert appends a new word to the tree
+                                                                                // only called in the constructor when the tree is made
     int index = 0;
     if (key.size() == 0) {
         return false;
     }
     if (!root) {
-        root = new TrieNode();
+        root = new TrieNode(); //if this is the first letter create a new node
     }
     TrieNode* currentNode = root;
     for (char c : key) {
         char c2 = std::tolower(c);
-        index = c2 - 'a';
+        index = c2 - 'a'; //each char is converted to an index in the array that the node pointer holds through this math
         if (!currentNode->children[index]) {
-            currentNode->children[index] = new TrieNode();
+            currentNode->children[index] = new TrieNode(); //if you reach a new letter where the value in the array at that index is nullptr activate the index by making it point to a new array of 26
             currentNode = currentNode->children[index];
         }
         else {
-            currentNode = currentNode->children[index];
+            currentNode = currentNode->children[index]; //if not keep traversing down the tree
         }
     }
+    //once you reach the spot in the tree add all the information
     currentNode->isEnd = true;
     currentNode->word = key;
     currentNode->conversion = value;
@@ -82,26 +85,24 @@ bool Trie::insert(std::string key, std::string value, unsigned long long usage){
 
 std::string Trie::search(std::string key) {
     TrieNode* currentNode = root;
-    for (char c : key) {
+    for (char c : key) { //loop through every char in the word
         char c2 = std::tolower(c);
         int index = c2 - 'a';
-        if (!currentNode->children[index]) {
+        if (!currentNode->children[index]) { //if the char doesn't exist in the order of the word we don't have the word in our dictionary
             return "not found";
         }
         else{
-            currentNode = currentNode->children[index];
+            currentNode = currentNode->children[index]; //keep traversing down the tree
         }
     }
-    if (currentNode->isEnd) {
+    if (currentNode->isEnd) { //check that we are actually at the end of each word if we are return the conversion stored there
         currentNode->count++;
         return currentNode->conversion;
     }
-    else {
-        return "not found";
-    }
+    return "not found";
 }
 
-Trie::~Trie() {
+Trie::~Trie() { //still need to implement this
     delete root;
 }
 //helper comparator function is based on info found here: https://www.geeksforgeeks.org/cpp/sorting-vector-tuple-c-descending-order/
@@ -149,11 +150,11 @@ void Trie::prefixSearchHelper(Trie::TrieNode* start, std::vector<std::tuple<std:
         return;
     }
 
-    if (start->isEnd) {
+    if (start->isEnd) { //check if where we are at is a word if it is add it because we want any words with 0-3 chars added on
         result.push_back(std::make_tuple(start->word, start->conversion, start->frequency));
     }
 
-    if (count == 3) { //this is the base case - we went three down are checking if its a word- if so we add it and return if not just return
+    if (count == 3) { //we want to only go three down so break out of the recursive call here
         return;
     }
     for (int i = 0; i < 26; i++) {
@@ -164,8 +165,9 @@ void Trie::prefixSearchHelper(Trie::TrieNode* start, std::vector<std::tuple<std:
     }
 }
 
-std::string Trie::getFunctionTime(std::string function, std::string word) {
+std::string Trie::getFunctionTime(std::string function, std::string word) { //function to compare the time of the two data structures
     auto clock = std::chrono::high_resolution_clock::now();
+    //check which of the 3 commands we are doing
     if (function == "constructor") {
         clock = std::chrono::high_resolution_clock::now();
         Trie t;
@@ -181,7 +183,7 @@ std::string Trie::getFunctionTime(std::string function, std::string word) {
     auto end = std::chrono::high_resolution_clock::now();
 
     std::chrono::duration<double> diff = end - clock;
-
+    // convert the time to a string so that it is printable
     return std::to_string(diff.count());
 
 }
