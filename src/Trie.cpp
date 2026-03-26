@@ -102,14 +102,15 @@ std::string Trie::search(std::string key) {
     return "not found";
 }
 
-Trie::~Trie() { //still need to implement this
+Trie::~Trie() {
     for (int i = 0; i < 26; i++) {
         if (root->children[i] != nullptr) {
-            delete root->children[i]; //this line will call the childs destructor if the child is not nullptr
+            delete root->children[i]; //this line will call the child's destructor if the child is not nullptr
         }
     }
     delete root;
 }
+
 //helper comparator function is based on info found here: https://www.geeksforgeeks.org/cpp/sorting-vector-tuple-c-descending-order/
 bool sortbyth(const std::tuple<std::string, std::string, unsigned long long>& a,const std::tuple<std::string, std::string, unsigned long long>& b) {
     return std::get<2>(a) > std::get<2>(b);
@@ -149,6 +150,14 @@ std::vector<std::tuple<std::string, std::string>> Trie::prefixSearch(std::string
 
     return smallerResult;
 }
+
+unsigned long long adaptiveFormula(unsigned long long key, int count) {
+    int a = 1; //this is what we will be multiplying frequency by
+    int b = 5; //this is what we will be multiplying count by
+    int normalizedCount = std::log(1+count); //I am choosing to normalize the count so it doesn't dominate as soon as one thing is disproportionatly searched for
+    unsigned long long result = (a * key) + (b * normalizedCount);
+    return result;
+}
 void Trie::prefixSearchHelper(Trie::TrieNode* start, std::vector<std::tuple<std::string, std::string, unsigned long long>>& result, int count) {
     //this is another base case - if going 3 down is a dead end then just return
     if (!start) {
@@ -156,6 +165,7 @@ void Trie::prefixSearchHelper(Trie::TrieNode* start, std::vector<std::tuple<std:
     }
 
     if (start->isEnd) { //check if where we are at is a word if it is add it because we want any words with 0-3 chars added on
+        //here we will go into a calculation on what frequency we want
         result.push_back(std::make_tuple(start->word, start->conversion, start->frequency));
     }
 
