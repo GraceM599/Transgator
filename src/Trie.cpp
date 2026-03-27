@@ -201,5 +201,5 @@ std::string Trie::getFunctionTime(std::string function, std::string word) { //fu
     std::chrono::duration<double> diff = end - clock;
     // convert the time to a string so that it is printable
     return std::to_string(diff.count());
-
+    //comment here
 }
