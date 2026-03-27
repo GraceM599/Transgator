@@ -74,6 +74,7 @@ DisplayWindow::DisplayWindow() :
 	// set all bools to false
 	prefix_on = false;
 	whole_on = false;
+	cursorvisible = false;
 
 	configureStaticText();
 }

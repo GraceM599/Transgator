@@ -2,14 +2,13 @@
 //
 
 #include "HashMap.h"
-
+#include <cmath>
 #include <filesystem>
 
-unsigned long long adaptiveFormula(unsigned long long key, int count) {
-    double a = 1.0; //this is what we will be multiplying frequency by
-    double b = 5.0; //this is what we will be multiplying count by
-    double normalizedCount = std::log(1+count); //I am choosing to normalize the count so it doesn't dominate as soon as one thing is disproportionatly searched for
-    unsigned long long result = (a * key) + (b * normalizedCount);
+unsigned long long adaptiveFormula1(unsigned long long key, int count) {
+    double a = 1; //this is what we will be multiplying frequency by
+    double b = 10000; //this is what we will be multiplying count by
+    unsigned long long result = (a * key) + (b * count);
     return result;
 }
 
@@ -46,7 +45,7 @@ unsigned long long HashMap::hash(const std::string& en)
     bool HashMap::loadData() {
         std::fstream in;
         bool success = true;
-        in.open("../../data/dictionary.csv");
+        in.open("data/dictionary.csv");
         if (!in) {
             std::cout << "Issue openning dictionary.csv in HashMap.h" << std::endl;
             return 0;
@@ -160,7 +159,7 @@ unsigned long long HashMap::hash(const std::string& en)
                     seen.insert(word);
                     t = search_Slot(word);
                     if (t.freq != 0) {
-                        t.freq = adaptiveFormula(t.freq,t.count); //added this to implement adaptivness?? - mikaela
+                        t.freq = adaptiveFormula1(t.freq,t.count); //added this to implement adaptivness?? - mikaela
                         total.push(t);
                     }
                 }

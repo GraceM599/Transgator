@@ -5,6 +5,7 @@
 #include <string>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 
 
 std::vector<std::string> getValues(std::string line) { //helper function to get data from the csv that is seperated by commas
@@ -26,7 +27,7 @@ std::vector<std::string> getValues(std::string line) { //helper function to get 
 bool Trie::loadData() {
     std::fstream in;
     bool success = true;
-    in.open("../../data/dictionary.csv");
+    in.open("data/dictionary.csv");
     if (!in) {
         std::cout << "Issue opening dictionary.csv in Trie.cpp" << std::endl;
         return 0;
@@ -152,10 +153,9 @@ std::vector<std::tuple<std::string, std::string>> Trie::prefixSearch(std::string
 }
 
 unsigned long long adaptiveFormula(unsigned long long key, int count) {
-    double a = 1.0; //this is what we will be multiplying frequency by
-    double b = 5.0; //this is what we will be multiplying count by
-    double normalizedCount = std::log(1+count); //I am choosing to normalize the count so it doesn't dominate as soon as one thing is disproportionatly searched for
-    unsigned long long result = (a * key) + (b * normalizedCount);
+    double a = 1; //this is what we will be multiplying frequency by
+    double b = 10000; //this is what we will be multiplying count by
+    unsigned long long result = (a * key) + (b * count);
     return result;
 }
 void Trie::prefixSearchHelper(Trie::TrieNode* start, std::vector<std::tuple<std::string, std::string, unsigned long long>>& result, int count) {
